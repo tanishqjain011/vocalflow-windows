@@ -5,6 +5,7 @@ A Windows port of [VocalFlow](https://github.com/Vocallabsai/vocalflow) — a li
 Built with **Electron**, **Deepgram** (real-time WebSocket STT), and **Groq** (LLM post-processing).
 
 ---
+<img width="672" height="743" alt="image" src="https://github.com/user-attachments/assets/50e9f505-4183-4d33-b63a-8c3caa589412" />
 
 ## ✨ Features
 
