@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';" />
+  <title>VocalFlow Settings</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-icon">🎙</div>
+  <div>
+    <h1>VocalFlow</h1>
+    <div class="subtitle">Hold-to-dictate for Windows</div>
+  </div>
+  <span class="badge">v1.0</span>
+</div>
+
+<!-- ── Recording indicator ────────────────────────────── -->
+<div class="recording-bar" id="recordingBar">
+  <div class="rec-dot"></div>
+  Recording… speak now
+  <span id="recTranscriptInline" style="font-weight:400;color:#f87171;margin-left:8px;"></span>
+</div>
+
+<!-- ── Balance bar (extra feature) ───────────────────── -->
+<div class="balance-bar">
+  <div class="balance-card" id="dgBalCard">
+    <div class="bc-title">🔊 Deepgram Balance</div>
+    <div class="bc-value" id="dgBalValue">—</div>
+    <div class="bc-sub"  id="dgBalSub">Click refresh to load</div>
+  </div>
+  <div class="balance-card" id="gqBalCard">
+    <div class="bc-title">⚡ Groq Status</div>
+    <div class="bc-value" id="gqBalValue">—</div>
+    <div class="bc-sub"  id="gqBalSub">Click refresh to load</div>
+  </div>
+  <button class="refresh-btn" id="refreshBalBtn">↻ Refresh</button>
+</div>
+
+<!-- ── Main content ────────────────────────────────────── -->
+<div class="content">
+
+  <!-- ── Deepgram ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">🔑 Deepgram — Speech-to-Text</div>
+    <div class="section-body">
+
+      <div class="row">
+        <label>API Key</label>
+        <input type="password" id="deepgramApiKey" placeholder="Enter Deepgram API key…" />
+        <button class="btn btn-ghost btn-sm" id="fetchDGModels">Fetch Models</button>
+      </div>
+
+      <div class="row">
+        <label>Model</label>
+        <select id="deepgramModel">
+          <option value="nova-2">nova-2 (default)</option>
+          <option value="nova">nova</option>
+          <option value="whisper-large">whisper-large</option>
+          <option value="base">base</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Language</label>
+        <input type="text" id="deepgramLanguage" placeholder="en" style="max-width:100px;" />
+        <span style="font-size:12px;color:var(--muted);">e.g. en, hi, fr, de, es…</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Groq ──────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">⚡ Groq — LLM Post-Processing</div>
+    <div class="section-body">
+
+      <div class="row">
+        <label>API Key</label>
+        <input type="password" id="groqApiKey" placeholder="Enter Groq API key…" />
+        <button class="btn btn-ghost btn-sm" id="fetchGQModels">Fetch Models</button>
+      </div>
+
+      <div class="row">
+        <label>Model</label>
+        <select id="groqModel">
+          <option value="llama3-8b-8192">llama3-8b-8192</option>
+          <option value="llama3-70b-8192">llama3-70b-8192</option>
+          <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+          <option value="gemma-7b-it">gemma-7b-it</option>
+        </select>
+      </div>
+
+      <div class="row toggle-row">
+        <label>Enable Post-Processing</label>
+        <label class="toggle">
+          <input type="checkbox" id="postProcessing" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div id="postProcessOptions">
+        <div class="row" style="margin-top:4px;">
+          <label>Processing Type</label>
+          <select id="postProcessType">
+            <option value="none">None (raw transcript)</option>
+            <option value="spelling">Spelling Correction</option>
+            <option value="grammar">Grammar Correction</option>
+            <option value="transliteration">Code-mix Transliteration</option>
+            <option value="translation">Translation</option>
+          </select>
+        </div>
+
+        <div class="row" id="transLangRow" style="display:none;">
+          <label>Transliteration Lang</label>
+          <select id="transLang">
+            <option>Hinglish</option><option>Tanglish</option><option>Spanglish</option>
+            <option>Franglais</option><option>Denglisch</option><option>Portlish</option>
+            <option>Japanglish</option><option>Konglish</option><option>Chinglish</option>
+            <option>Arabish</option><option>Bengalish</option><option>Teluglish</option>
+            <option>Kannadish</option><option>Marathish</option><option>Gujarish</option>
+          </select>
+        </div>
+
+        <div class="row" id="targetLangRow" style="display:none;">
+          <label>Target Language</label>
+          <input type="text" id="targetLang" placeholder="English" style="max-width:180px;" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Hotkey ─────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">⌨  Hotkey</div>
+    <div class="section-body">
+      <div class="row">
+        <label>Hold to Record</label>
+        <select id="hotkey">
+          <option value="AltRight">Right Alt</option>
+          <option value="AltLeft">Left Alt</option>
+          <option value="ControlRight">Right Ctrl</option>
+          <option value="ControlLeft">Left Ctrl</option>
+        </select>
+        <span style="font-size:12px;color:var(--muted);">Hold key → speak → release → text appears</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Live Transcript ───────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">📝 Live Transcript</div>
+    <div class="section-body">
+      <div class="transcript-box" id="transcriptBox">
+        <span style="color:var(--muted);font-style:italic;">
+          Your dictated text will appear here…
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- ── Footer ──────────────────────────────────────────── -->
+<div class="footer">
+  <div class="footer-links">
+    <a id="dgLink">Deepgram Console</a>
+    <a id="gqLink">Groq Console</a>
+  </div>
+  <button class="btn btn-primary" id="saveBtn">Save Settings</button>
+</div>
+
+<!-- ── Toast ───────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script src="renderer.js"></script>
+</body>
+</html>
